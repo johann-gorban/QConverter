@@ -1,20 +1,27 @@
-#pragme once
+#pragma once
+
+#include "context.h"
 
 #include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-
-namespace Ui {
-    class MainWindow;
-}
-
-QT_END_NAMESPACE
-
+#include <QLineEdit>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
+private:
+    Context context;
+    QLineEdit *outputLine;
 public:
     MainWindow(QWidget *parent = nullptr);
 
-    ~MainWindow();
+    ~MainWindow() = default;
+private slots:
+    void convertNumber();
+
+    void updateDisplay();
+
+    void updateInputValue(const QString&);
+
+    void updateInputBase(const QString&);
+
+    void updateOutputBase(const QString&);
 };

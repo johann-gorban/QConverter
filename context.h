@@ -1,6 +1,10 @@
 #pragma once
 
 typedef struct {
-    char *num;
-    unsigned int base
+    char *source_num;
+    unsigned int source_base;
+
+    char *final_num;
+    unsigned int final_base;
 } Context;
+

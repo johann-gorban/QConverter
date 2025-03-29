@@ -1,15 +1,18 @@
 #include "entry.h"
+#include "logic.h"
 
+#include <stdio.h>
 
-void executeOperation(Operation operation, Context *contex, AppContext *app_context) {
+void executeOperation(Operation operation, Context *context) {
+    int temp = 0;
     switch (operation) {
-    case DecToAny:
-        int num = str_to_int(context->num);
-        context->num = dec_to_any(num, app_context->base_to);
+    case convert:
+        temp = any_to_dec(context->source_num, context->source_base);
+        context->final_num = dec_to_any(temp, context->final_base);
+        printf("source: %s\ntemp: %d\nin bin: %s\n", context->source_num, temp, dec_to_any(temp, 2));
         break;
-    case AnyToDec:
-        int num = any_to_dec(context->num, app_context->base_to);
-        context->num = dec_to_any(num, 10);
+    default:
+        context->final_num = "0";
         break;
     }
 }
