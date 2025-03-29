@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include <math.h>
 
 #define TRUE 1
@@ -30,6 +29,7 @@ const char DIGITS_CHAR[] = {
 unsigned int get_dec_by_char(const char digit) {
     unsigned int res = 0;
     switch (digit) {
+    // Default digits
     case '0': res = 0; break;
     case '1': res = 1; break;
     case '2': res = 2; break;
@@ -40,12 +40,23 @@ unsigned int get_dec_by_char(const char digit) {
     case '7': res = 7; break;
     case '8': res = 8; break;
     case '9': res = 9; break;
+
+        // Upper case
     case 'A': res = 10; break;
     case 'B': res = 11; break;
     case 'C': res = 12; break;
     case 'D': res = 13; break;
     case 'E': res = 14; break;
     case 'F': res = 15; break;
+
+    // Lower case
+    case 'a': res = 10; break;
+    case 'b': res = 11; break;
+    case 'c': res = 12; break;
+    case 'd': res = 13; break;
+    case 'e': res = 14; break;
+    case 'f': res = 15; break;
+
     default: res = 0; break;
     }
     return res;
@@ -112,7 +123,7 @@ int any_to_dec(const char *str, const unsigned int base) {
         size_t length = strlen(str);
 
         for (size_t i = length; i != 0; i--) {
-            result += (str[length - i] - '0') * pow(base, i - 1);
+            result += get_dec_by_char(str[length - i]) * pow(base, i - 1);
         }
     }
 

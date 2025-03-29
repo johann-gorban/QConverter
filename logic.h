@@ -25,6 +25,3 @@ int str_to_int(const char *);
 #ifdef __cplusplus
 }
 #endif
-
-
-
