@@ -1,5 +1,8 @@
-#include <string.h>
+#include "logic.h"
+
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <math.h>
 
 #define TRUE 1
@@ -83,7 +86,9 @@ char *dec_to_any(const int num, const unsigned int base) {
     char *str = (char *)malloc(sizeof(char) * 65);
     str[0] = '\0';
 
-    int cpy_num = num;
+    int coef = (num < 0 && base == 10) ? -1 : 1;
+
+    int cpy_num = coef * num;
     do {
         char digit[2];
         digit[0] = DIGITS_CHAR[cpy_num % base];
@@ -92,6 +97,10 @@ char *dec_to_any(const int num, const unsigned int base) {
         strcat(str, digit);
         cpy_num /= base;
     } while (cpy_num);
+
+    if (coef == -1) {
+        strcat(str, "-\0");
+    }
 
     return reverse_str(str);
 }
@@ -103,7 +112,7 @@ int any_to_dec(const char *str, const unsigned int base) {
         size_t length = strlen(str);
 
         for (size_t i = length; i != 0; i--) {
-            result += get_dec_by_char(str[length - i]) * pow(base, i - 1);
+            result += (str[length - i] - '0') * pow(base, i - 1);
         }
     }
 
