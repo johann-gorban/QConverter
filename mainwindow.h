@@ -4,12 +4,15 @@
 
 #include <QMainWindow>
 #include <QLineEdit>
+#include <QMap>
+#include <QString>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
     Context context;
     QLineEdit *outputLine;
+    QMap<QString, unsigned int> bases;
 public:
     MainWindow(QWidget *parent = nullptr);
 

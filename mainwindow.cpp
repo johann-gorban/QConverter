@@ -3,28 +3,33 @@
 
 #include <QtWidgets>
 #include <string>
+#include <iostream>
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+    // Setup bases hash map
+    bases["Binary"] = 2;
+    bases["Octal"] = 8;
+    bases["Decimal"] = 10;
+    bases["Hexidecimal"] = 16;
+
     // Setup context default values
-    context.source_num = (char *)"\0";
+    context.source_num = (char *)"0\0";
     context.source_base = 2;
-    context.final_num = (char *)"\0";
+    context.final_num = (char *)"0\0";
     context.final_base = 2;
 
     // Set maximum window size
-    this->setFixedSize(350, 250);
+    setFixedSize(350, 250);
 
-    QStringList convertionBases = {
-        "Binary",
-        "Octal",
-        "Decimal",
-        "Hexidecimal"
-    };
+    QStringList convertionBases;
+    for (auto key : bases.keys()) {
+        convertionBases.append(key);
+    }
 
     // Central widget setup
     auto centralWidget = new QWidget(this);
-    this->setCentralWidget(centralWidget);
+    setCentralWidget(centralWidget);
 
     // Input line combo box setup
     auto inputBaseBox = new QComboBox;
@@ -34,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     // Input line setup
     auto inputLine = new QLineEdit;
+    inputLine->setText("0");
+    inputLine->setFixedHeight(40);
 
     QObject::connect(inputLine, SIGNAL(textChanged(QString)), this, SLOT(updateInputValue(QString)));
 
@@ -46,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // Output line setup
     outputLine = new QLineEdit;
     outputLine->setReadOnly(true);
+    outputLine->setText("0");
+    outputLine->setFixedHeight(40);
 
     // Convert button setup
     auto convertButton = new QPushButton("Convert");
@@ -68,7 +77,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     centralWidget->setLayout(box);
 }
 
-
 void MainWindow::convertNumber() {
     executeOperation(convert, &context);
     updateDisplay();
@@ -87,29 +95,21 @@ void MainWindow::updateInputValue(const QString &value) {
 }
 
 void MainWindow::updateInputBase(const QString &base) {
-    if (base == "Binary") {
-        context.source_base = 2;
-    } else if (base == "Octal") {
-        context.source_base = 8;
-    } else if (base == "Decimal") {
-        context.source_base = 10;
-    } else if (base == "Hexidecimal") {
-        context.source_base = 16;
-    } else {
-        context.source_base = 10;
+    auto fb = bases.find(base);
+    if (fb != bases.end()) {
+        context.source_base = fb.value();
+    }
+    else {
+        context.source_base = 0;
     }
 }
 
 void MainWindow::updateOutputBase(const QString &base) {
-    if (base == "Binary") {
-        context.final_base = 2;
-    } else if (base == "Octal") {
-        context.final_base = 8;
-    } else if (base == "Decimal") {
-        context.final_base = 10;
-    } else if (base == "Hexidecimal") {
-        context.final_base = 16;
-    } else {
-        context.final_base = 10;
+    auto fb = bases.find(base);
+    if (fb != bases.end()) {
+        context.final_base = fb.value();
+    }
+    else {
+        context.final_base = 0;
     }
 }
