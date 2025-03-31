@@ -20,6 +20,8 @@ public:
 private slots:
     void convertNumber();
 
+    void copyResult();
+
     void updateDisplay();
 
     void updateInputValue(const QString&);

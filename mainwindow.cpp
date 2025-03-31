@@ -56,11 +56,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     outputLine->setText("0");
     outputLine->setFixedHeight(40);
 
+    // Copy to clipboard button setup
+    auto copyButton = new QPushButton("Copy");
+    copyButton->setFixedHeight(50);
+
+    QObject::connect(copyButton, &QPushButton::clicked, this, &MainWindow::copyResult);
+
     // Convert button setup
     auto convertButton = new QPushButton("Convert");
+    convertButton->setFixedHeight(50);
 
     QObject::connect(convertButton, &QPushButton::clicked, this, &MainWindow::convertNumber);
 
+    // Button layout setup
+    auto buttonBox = new QHBoxLayout;
+
+    buttonBox->addWidget(copyButton);
+    buttonBox->addWidget(convertButton);
 
     // Layout setup
     auto box = new QVBoxLayout;
@@ -71,7 +83,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     box->addWidget(outputBaseBox);
     box->addWidget(outputLine);
 
-    box->addWidget(convertButton);
+    box->addLayout(buttonBox);
 
     // Set layout
     centralWidget->setLayout(box);
@@ -80,6 +92,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 void MainWindow::convertNumber() {
     executeOperation(convert, &context);
     updateDisplay();
+}
+
+void MainWindow::copyResult() {
+    auto clipboard = QGuiApplication::clipboard();
+    clipboard->setText(context.final_num);
 }
 
 void MainWindow::updateDisplay() {
