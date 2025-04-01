@@ -6,13 +6,28 @@
 #include <QLineEdit>
 #include <QMap>
 #include <QString>
+#include <QPushButton>
+
+#include <QtWidgets>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
     Context context;
-    QLineEdit *outputLine;
     QMap<QString, unsigned int> bases;
+private:
+    QLineEdit *inputLine;
+    QLineEdit *outputLine;
+
+    QComboBox *inputBaseBox;
+    QComboBox *outputBaseBox;
+
+    QPushButton *convertButton;
+    QPushButton *copyButton;
+
+    QHBoxLayout *buttonBox;
+    QVBoxLayout *centralLayout;
+
 public:
     MainWindow(QWidget *parent = nullptr);
 

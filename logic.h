@@ -4,8 +4,11 @@
 extern "C" {
 #endif
 
+// Function to check the size of the number with given base
+int fits_in_32_bits(const char *, unsigned int);
+
 // Function to reverse the string
-char *reverse_str(const char *);
+void reverse_str(char *, char *);
 
 // Function to convert decimal number to number with the given base
 char *dec_to_any(const int, const unsigned int);
@@ -20,7 +23,7 @@ int any_to_dec(const char *, const unsigned int);
 int validate_base(const char *, const unsigned int);
 
 // Function to convert string to integer
-int str_to_int(const char *);
+int str_to_int(const char *); // Вынести в utils
 
 #ifdef __cplusplus
 }
