@@ -12,10 +12,12 @@ SOURCES += \
     logic.c \
     entry.c \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+        utils.c
 
 
 HEADERS += \
+    utils.h \
     logic.h \
     context.h \
     entry.h \

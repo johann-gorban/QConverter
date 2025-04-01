@@ -1,5 +1,5 @@
 #include "logic.h"
-
+#include "utils.h"
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -10,7 +10,7 @@
 #include <limits.h>
 
 #define TRUE 1
-#define FALSE
+#define FALSE 0
 
 #define BIN_BASE 2
 #define OCT_BASE 8
@@ -19,114 +19,72 @@
 
 #define MAX_BITS 32
 
-#define MAX_BASE   HEX_BASE
-#define MIN_BASE    BIN_BASE
+#define MAX_BASE   16
+#define MIN_BASE    2
 
 const char DIGITS_CHAR[] = "0123456789ABCDEF";
 
-unsigned int get_dec_by_char(const char digit) {
-    unsigned int res = 0;
+int get_dec_by_char(const char digit) {
+    int res = -1;
 
     if (isdigit(digit)) {
         res = digit - '0';
-    } else if (isupper(digit)){
-        res = digit - 'A';
-    } else if (islower(digit)) {
-        res = digit - 'a';
+    }
+    if (isupper(digit)){
+        res = digit - 'A' + 10;
+    }
+    if (islower(digit)) {
+        res = digit - 'a' + 10;
     }
 
     return res;
 }
 
 // Декомпозировать, убрать множественные ретурны
-int fits_in_32_bits(const char* str, unsigned int base) {
+int fits_in_32_bits(const char *str, unsigned int base) {
+    int result = TRUE;
     if (base < MIN_BASE || base > MAX_BASE)
-        return 0;
+        result = FALSE;
 
-    int is_negative = 0;
-    const char* num_start = str;
-
-    if (*num_start == '-') {
-        if (base != 10) return 0;
-        is_negative = 1;
-        num_start++;
-    } else if (*num_start == '+') {
-        num_start++;
+    if (!validate_base(str, base)) {
+        result = FALSE;
     }
 
-    if (*num_start == '\0') return 0;
-
-    uint32_t max_val;
-    if (base == 10) {
-        if (is_negative) {
+    uint32_t max_val = UINT32_MAX;
+    if (base == DEC_BASE && str[0] == '-') {
             max_val = UINT16_MAX;
-        } else {
-            max_val = INT32_MAX;
-        }
-    } else {
-        max_val = UINT32_MAX;
     }
 
     uint32_t value = 0;
     uint32_t max_div_base = max_val / base;
 
-    for (const char* p = num_start; *p != '\0'; p++) {
-        if (*p == '-' && base != DEC_BASE) {
-            is_negative = 1;
-            continue;
-        }
+    for (const char *p = str; *p != '\0'; p++) {
+        int digit = get_dec_by_char(*p);
 
-        int digit;
-        if (isdigit(*p)) {
-            digit = *p - '0';
-        } else if (isupper(*p)) {
-            digit = *p - 'A' + 10;
-        } else if (islower(*p)) {
-            digit = *p - 'a' + 10;
-        } else {
-            return 0;  // Недопустимый символ
-        }
+        if (value > max_div_base) result = FALSE;
 
-        if (digit >= base) return 0;
-
-        if (value > max_div_base) return 0;
         value *= base;
 
-        if (value > max_val - digit) return 0;
+        if (value > max_val - digit) result = FALSE;
+
         value += digit;
     }
 
-    if (is_negative && base != DEC_BASE) {
-        if (value > UINT16_MAX) return 0;
-    }
-
-    return 1;
+    return result;
 }
 
 int validate_base(const char *str, const unsigned int base) {
+    int result = TRUE;
     for (size_t i = 0; i < strlen(str); i++) {
         if (base == DEC_BASE && str[0] == '-'){
             continue;
         }
-        if (get_dec_by_char(str[i]) >= base) {
-            return FALSE;
+        int digit = get_dec_by_char(str[i]);
+        if (digit >= base || digit < 0) {
+            result = FALSE;
         }
     }
-    return TRUE;
-}
-
-void swap(char *a, char *b) {
-    char temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
-void reverse_str(char *start, char *end) {
-    while (start < end) {
-        swap(start, end);
-        start++;
-        end--;
-    }
+    return result;
 }
 
 char *dec_to_any(const int num, const unsigned int base) {
@@ -176,7 +134,7 @@ int any_to_dec(const char *str, const unsigned int base) {
 int str_to_int(const char *str) {
     int num = 0;
 
-    if (validate_base(str, DEC_BASE) && fits_in_32_bits(str, DEC_BASE)) {
+    if (validate_base(str, DEC_BASE)) {
         const size_t length = strlen(str);
         for (size_t i = 0; i < length; i++) {
             if (str[i] != '-') {
