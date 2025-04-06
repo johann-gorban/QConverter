@@ -6,9 +6,6 @@
 extern "C" {
 #endif
 
-// Function to check the size of the number with given base
-int fits_in_32_bits(const char *, unsigned int);
-
 // Function to convert decimal number to number with the given base
 char *dec_to_any(const int, const unsigned int);
 
@@ -21,13 +18,8 @@ int any_to_dec(const char *, const unsigned int);
 // Function to validate string as number with the given base
 int validate_base(const char *, const unsigned int);
 
-// Function to convert string to integer
-int str_to_int(const char *);
-
 // Context initialization
 void context_init(Context *);
-
-char *int_to_str(const int);
 
 #ifdef __cplusplus
 }

@@ -30,33 +30,6 @@ int get_dec_by_char(const char digit) {
     return res;
 }
 
-int fits_in_32_bits(const char *str, unsigned int base) {
-    int result = FALSE;
-
-    if (validate_base(str, base) && base >= MIN_BASE && base <= MAX_BASE) {
-        int is_negative = 0;
-        const char *ptr = str;
-
-        if (base == 10 && *ptr == '-') {
-            is_negative = 1;
-            ptr++;
-        }
-
-        unsigned long long value = 0;
-        while (*ptr) {
-            char c = toupper(*ptr++);
-            int digit = (c >= '0' && c <= '9') ? c - '0' : c - 'A' + 10;
-            value = value * base + digit;
-        }
-
-        if ((is_negative && value <= 2147483648ULL) || (!is_negative && value <= 2147483647ULL)) {
-            result = TRUE;
-        }
-    }
-
-    return result;
-}
-
 int validate_base(const char *str, const unsigned int base) {
     int result = TRUE;
     for (size_t i = 0; i < strlen(str); i++) {
@@ -134,10 +107,6 @@ int32_t any_to_dec(const char *str, const unsigned int base) {
 
     return result;
 }
-
-
-
-
 
 void context_init(Context *context) {
     context->source_num = (char *)"0\0";
