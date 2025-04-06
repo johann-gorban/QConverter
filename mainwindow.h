@@ -13,9 +13,11 @@
 class MainWindow : public QMainWindow {
     Q_OBJECT
 private:
+    // Class attributes
     Context context;
     QMap<QString, unsigned int> bases;
-private:
+
+    // Widgets
     QLineEdit *inputLine;
     QLineEdit *outputLine;
 
@@ -31,10 +33,6 @@ private:
     void widgets_setup();
     void bases_setup();
     void slots_connect();
-public:
-    MainWindow(QWidget *parent = nullptr);
-
-    ~MainWindow() = default;
 private slots:
     void convertNumber();
 
@@ -47,4 +45,8 @@ private slots:
     void updateInputBase(const QString&);
 
     void updateOutputBase(const QString&);
+public:
+    MainWindow(QWidget *parent = nullptr);
+
+    ~MainWindow() = default;
 };
