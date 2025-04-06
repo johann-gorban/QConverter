@@ -1,15 +1,12 @@
 #include "mainwindow.h"
+
 #include "entry.h"
+#include "bases.h"
+
+#include <string>
 
 #include <QtWidgets>
-#include <string>
-#include <iostream>
 #include <QTimer>
-
-#define BIN_BASE 2
-#define OCT_BASE 8
-#define DEC_BASE 10
-#define HEX_BASE 16
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {

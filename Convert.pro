@@ -17,6 +17,8 @@ SOURCES += \
 
 
 HEADERS += \
+    bases.h \
+    errors.h \
     utils.h \
     logic.h \
     context.h \

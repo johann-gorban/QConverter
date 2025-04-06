@@ -27,6 +27,8 @@ int str_to_int(const char *);
 // Context initialization
 void context_init(Context *);
 
+char *int_to_str(const int);
+
 #ifdef __cplusplus
 }
 #endif

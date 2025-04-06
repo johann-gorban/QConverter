@@ -1,26 +1,16 @@
 #include "logic.h"
-#include "utils.h"
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 
-#include <stdio.h>
-#include <ctype.h>
+#include "utils.h"
+#include "errors.h"
+#include "bases.h"
+
+#include <string.h>
+#include <stdlib.h>
 #include <stdint.h>
-#include <limits.h>
+#include <ctype.h>
 
 #define TRUE 1
 #define FALSE 0
-
-#define BIN_BASE 2
-#define OCT_BASE 8
-#define DEC_BASE 10
-#define HEX_BASE 16
-
-#define MAX_BITS 32
-
-#define MAX_BASE   16
-#define MIN_BASE    2
 
 const char DIGITS_CHAR[] = "0123456789ABCDEF";
 
@@ -40,34 +30,28 @@ int get_dec_by_char(const char digit) {
     return res;
 }
 
-// Декомпозировать, убрать множественные ретурны
 int fits_in_32_bits(const char *str, unsigned int base) {
-    int result = TRUE;
-    if (base < MIN_BASE || base > MAX_BASE)
-        result = FALSE;
+    int result = FALSE;
 
-    if (!validate_base(str, base)) {
-        result = FALSE;
-    }
+    if (validate_base(str, base) && base >= MIN_BASE && base <= MAX_BASE) {
+        int is_negative = 0;
+        const char *ptr = str;
 
-    uint32_t max_val = UINT32_MAX;
-    if (base == DEC_BASE && str[0] == '-') {
-            max_val = UINT16_MAX;
-    }
+        if (base == 10 && *ptr == '-') {
+            is_negative = 1;
+            ptr++;
+        }
 
-    uint32_t value = 0;
-    uint32_t max_div_base = max_val / base;
+        unsigned long long value = 0;
+        while (*ptr) {
+            char c = toupper(*ptr++);
+            int digit = (c >= '0' && c <= '9') ? c - '0' : c - 'A' + 10;
+            value = value * base + digit;
+        }
 
-    for (const char *p = str; *p != '\0'; p++) {
-        int digit = get_dec_by_char(*p);
-
-        if (value > max_div_base) result = FALSE;
-
-        value *= base;
-
-        if (value > max_val - digit) result = FALSE;
-
-        value += digit;
+        if ((is_negative && value <= 2147483648ULL) || (!is_negative && value <= 2147483647ULL)) {
+            result = TRUE;
+        }
     }
 
     return result;
@@ -88,71 +72,78 @@ int validate_base(const char *str, const unsigned int base) {
 }
 
 char *dec_to_any(const int num, const unsigned int base) {
-    if (base > MAX_BASE || base < MIN_BASE) {
-        return NULL;
+    char *result = NULL;
+
+    int ok = 1;
+
+    char *buffer = (char *)malloc(MAX_BITS + 3);  // +1 знак, +1 \0
+    if (!buffer || base < MIN_BASE || base > MAX_BASE) {
+        ok = 0;
     }
 
-    // decompose and check whether it returns nullptr
-    char *str = (char *)malloc(sizeof(char) * (MAX_BITS + 1));
-    str[0] = '\0';
+    else {
+        int i = 0;
+        if (base != DEC_BASE) {
+            uint32_t val = (uint32_t)num;
+            do {
+                buffer[i++] = DIGITS_CHAR[val % base];
+                val /= base;
+            } while (val);
 
-    int coef = (num < 0 && base == DEC_BASE) ? -1 : 1;
-
-    int cpy_num = coef * num;
-    do {
-        char digit[2];
-        digit[0] = DIGITS_CHAR[cpy_num % base];
-        digit[1] = '\0';
-
-        strcat(str, digit);
-        cpy_num /= base;
-    } while (cpy_num);
-
-    if (coef == -1) {
-        strcat(str, "-\0");
+            buffer[i] = '\0';
+            reverse_str(buffer, buffer + i - 1);
+            result = buffer;
+        }
+        else {
+            result = int_to_str(num);
+        }
     }
 
-    reverse_str(str, str + strlen(str) - 1);
-
-    return str;
+    if (!ok && buffer) free(buffer);
+    return result;
 }
 
-int any_to_dec(const char *str, const unsigned int base) {
-    int result = 0;
+int32_t any_to_dec(const char *str, const unsigned int base) {
+    int32_t result = 0;
+    if (validate_base(str, base)) {
+        // Process decimal number
+        if (base == DEC_BASE) {
+            int sign = 1;
+            size_t i = 0;
 
-    if (validate_base(str, base) && fits_in_32_bits(str, base)) {
-        size_t length = strlen(str);
+            if (str[0] == '-') {
+                sign = -1;
+                i = 1;
+            }
 
-        for (size_t i = length; i != 0; i--) {
-            result += get_dec_by_char(str[length - i]) * pow(base, i - 1);
+            for (; str[i]; ++i) {
+                result = result * DEC_BASE + get_dec_by_char(str[i]);
+            }
+
+            result *= sign;
+        }
+        // Process two's complement
+        else {
+            uint32_t unsigned_result = 0;
+            for (size_t i = 0; str[i]; ++i) {
+                unsigned_result = unsigned_result * base + get_dec_by_char(str[i]);
+            }
+            result = (int32_t) unsigned_result;
         }
     }
 
     return result;
 }
 
-int str_to_int(const char *str) {
-    int num = 0;
 
-    if (validate_base(str, DEC_BASE)) {
-        const size_t length = strlen(str);
-        for (size_t i = 0; i < length; i++) {
-            if (str[i] != '-') {
-                unsigned int digit = (int)str[i] - '0';
-                num += (int)(digit * pow(DEC_BASE, length - i - 1));
-            }
-        }
 
-        if (str[0] == '-') {
-            num = (-1) * num;
-        }
-    }
-    return num;
-}
+
 
 void context_init(Context *context) {
     context->source_num = (char *)"0\0";
     context->source_base = 2;
     context->final_num = (char *)"0\0";
     context->final_base = 2;
+    context->error_flag = FALSE;
+    context->error = -1;
 }
