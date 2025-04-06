@@ -80,7 +80,7 @@ int validate_base(const char *str, const unsigned int base) {
             continue;
         }
         int digit = get_dec_by_char(str[i]);
-        if (digit >= base || digit < 0) {
+        if (digit < 0 || digit >= base) {
             result = FALSE;
         }
     }
