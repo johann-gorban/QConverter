@@ -1,5 +1,7 @@
 #pragma once
 
+#include "context.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -20,7 +22,10 @@ int any_to_dec(const char *, const unsigned int);
 int validate_base(const char *, const unsigned int);
 
 // Function to convert string to integer
-int str_to_int(const char *); // Вынести в utils
+int str_to_int(const char *);
+
+// Context initialization
+void context_init(Context *);
 
 #ifdef __cplusplus
 }

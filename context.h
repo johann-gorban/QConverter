@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     char *source_num;
     unsigned int source_base;
@@ -8,3 +12,6 @@ typedef struct {
     unsigned int final_base;
 } Context;
 
+#ifdef __cplusplus
+}
+#endif

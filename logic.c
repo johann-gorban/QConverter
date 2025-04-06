@@ -149,3 +149,10 @@ int str_to_int(const char *str) {
     }
     return num;
 }
+
+void context_init(Context *context) {
+    context->source_num = (char *)"0\0";
+    context->source_base = 2;
+    context->final_num = (char *)"0\0";
+    context->final_base = 2;
+}

@@ -27,7 +27,10 @@ private:
 
     QHBoxLayout *buttonBox;
     QVBoxLayout *centralLayout;
-
+private:
+    void widgets_setup();
+    void bases_setup();
+    void slots_connect();
 public:
     MainWindow(QWidget *parent = nullptr);
 
