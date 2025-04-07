@@ -26,6 +26,7 @@ private:
 
     QPushButton *convertButton;
     QPushButton *copyButton;
+    QPushButton *swapButton;
 
     QHBoxLayout *buttonBox;
     QVBoxLayout *centralLayout;
@@ -37,6 +38,8 @@ private slots:
     void convertNumber();
 
     void copyResult();
+
+    void swapLines();
 
     void updateDisplay();
 

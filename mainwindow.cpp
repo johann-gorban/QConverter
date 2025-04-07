@@ -39,6 +39,22 @@ void MainWindow::copyResult() {
     });
 }
 
+void MainWindow::swapLines() {
+    // Swap bases
+    auto current_output_base = outputBaseBox->currentText();
+    auto current_input_base = inputBaseBox->currentText();
+
+    outputBaseBox->setCurrentText(current_input_base);
+    inputBaseBox->setCurrentText(current_output_base);
+
+    // Swap edit lines
+    auto current_input_line = inputLine->text();
+    auto current_output_line = outputLine->text();
+
+    inputLine->setText(current_output_line);
+    outputLine->setText(current_input_line);
+}
+
 void MainWindow::updateDisplay() {
     outputLine->setText(context.final_num);
 }
@@ -102,19 +118,24 @@ void MainWindow::widgets_setup() {
     outputLine->setText("0");
     outputLine->setFixedHeight(40);
 
-    // Copy to clipboard button setup
-    copyButton = new QPushButton("Copy");
-    copyButton->setFixedHeight(50);
-
     // Convert button setup
     convertButton = new QPushButton("Convert");
     convertButton->setFixedHeight(50);
 
+    // Swap bases button setup
+    swapButton = new QPushButton("Swap");
+    swapButton->setFixedHeight(50);
+
+    // Copy to clipboard button setup
+    copyButton = new QPushButton("Copy");
+    copyButton->setFixedHeight(50);
+
     // Button layout setup
     buttonBox = new QHBoxLayout;
 
-    buttonBox->addWidget(copyButton);
     buttonBox->addWidget(convertButton);
+    buttonBox->addWidget(swapButton);
+    buttonBox->addWidget(copyButton);
 
     // Layout setup
     centralLayout = new QVBoxLayout;
@@ -141,6 +162,8 @@ void MainWindow::slots_connect() {
     QObject::connect(copyButton, &QPushButton::clicked, this, &MainWindow::copyResult);
 
     QObject::connect(convertButton, &QPushButton::clicked, this, &MainWindow::convertNumber);
+
+    QObject::connect(swapButton, &QPushButton::clicked, this, &MainWindow::swapLines);
 }
 
 void MainWindow::bases_setup() {
