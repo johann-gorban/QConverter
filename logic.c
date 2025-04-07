@@ -11,8 +11,8 @@
 #define TRUE 1
 #define FALSE 0
 
-#define OK          0
-#define ERROR   1
+#define OK 0
+#define ERROR 1
 
 const char *Error_messages[] = {
     "The input number is too long",
@@ -44,7 +44,7 @@ int validate_base(const char *str, const unsigned int base) {
             continue;
         }
         int digit = get_dec_by_char(str[i]);
-        if (digit < 0 || digit >= base) {
+        if (digit < 0 || (unsigned int) digit >= base) {
             result = ERROR;
         }
     }

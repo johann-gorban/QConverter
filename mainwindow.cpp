@@ -38,7 +38,7 @@ void MainWindow::convertNumber() {
 
 void MainWindow::showErrorWarning() {
     const QString message = (context.error_message == NULL) ? "Unknown error" : context.error_message;
-    QMessageBox::critical(this, "Error ocurred", message, QMessageBox::Ok);
+    QMessageBox::critical(this, "Error", message, QMessageBox::Ok);
 }
 
 void MainWindow::copyResult() {
