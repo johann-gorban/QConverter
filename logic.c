@@ -6,7 +6,6 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <ctype.h>
 
 #define TRUE 1
@@ -44,7 +43,7 @@ int validate_base(const char *str, const unsigned int base) {
     return result;
 }
 
-char *dec_to_any(const int num, const unsigned int base) {
+char *dec_to_any(const int32_t num, const unsigned int base) {
     char *result = NULL;
 
     int ok = 1;
