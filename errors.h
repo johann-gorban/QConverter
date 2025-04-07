@@ -6,7 +6,8 @@ extern "C" {
 
 typedef enum {
     TOO_LONG_NUM,
-    INCORRECT_INPUT
+    INCORRECT_INPUT,
+    WRONG_BASE
 } Error;
 
 #ifdef __cplusplus

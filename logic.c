@@ -79,7 +79,10 @@ char *dec_to_any(const int32_t num, const unsigned int base) {
         }
     }
 
-    if (!ok && buffer) free(buffer);
+    if (!ok && buffer)  {
+        free(buffer);
+    }
+
     return result;
 }
 
