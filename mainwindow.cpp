@@ -7,8 +7,6 @@
 #include <cstring>
 
 #include <QtWidgets>
-#include <QTimer>
-
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // Setup bases hash map
@@ -22,6 +20,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
     // Slots for widgets connection
     slots_connect();
+}
+
+MainWindow::~MainWindow() {
+    free(context.source_num);
+    free(context.final_num);
+    if (context.error_message) {
+        free(context.error_message);
+    }
 }
 
 void MainWindow::convertNumber() {

@@ -2,11 +2,8 @@
 
 #include "context.h"
 
-#include <QMainWindow>
-#include <QLineEdit>
 #include <QMap>
 #include <QString>
-#include <QPushButton>
 
 #include <QtWidgets>
 
@@ -32,7 +29,9 @@ private:
     QVBoxLayout *centralLayout;
 private:
     void widgets_setup();
+
     void bases_setup();
+
     void slots_connect();
 private slots:
     void convertNumber();
@@ -53,5 +52,5 @@ private slots:
 public:
     MainWindow(QWidget *parent = nullptr);
 
-    ~MainWindow() = default;
+    ~MainWindow();
 };
