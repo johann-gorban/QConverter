@@ -9,7 +9,8 @@ extern "C" {
 // Available operations
 typedef enum {
     convert,
-    context_initialization
+    context_initialization,
+    validate
 } Operation;
 
 // Main function to execute operations (other functions)

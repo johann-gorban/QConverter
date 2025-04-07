@@ -15,6 +15,7 @@ typedef struct {
 
     int error_flag;
     Error error;
+    char *error_message;
 } Context;
 
 #ifdef __cplusplus

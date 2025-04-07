@@ -23,6 +23,9 @@ int validate_base(const char *, const unsigned int);
 // Context initialization
 void context_init(Context *);
 
+// Function to get error message by index
+const char *get_error_message(const Error);
+
 #ifdef __cplusplus
 }
 #endif

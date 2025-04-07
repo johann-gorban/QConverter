@@ -43,6 +43,8 @@ private slots:
 
     void updateDisplay();
 
+    void showErrorWarning();
+
     void updateInputValue(const QString&);
 
     void updateInputBase(const QString&);

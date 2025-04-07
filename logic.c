@@ -11,6 +11,14 @@
 #define TRUE 1
 #define FALSE 0
 
+#define OK          0
+#define ERROR   1
+
+const char *Error_messages[] = {
+    "The input number is too long",
+    "The input number is incorrect"
+};
+
 const char DIGITS_CHAR[] = "0123456789ABCDEF";
 
 int get_dec_by_char(const char digit) {
@@ -30,14 +38,14 @@ int get_dec_by_char(const char digit) {
 }
 
 int validate_base(const char *str, const unsigned int base) {
-    int result = TRUE;
+    int result = OK;
     for (size_t i = 0; i < strlen(str); i++) {
         if (base == DEC_BASE && str[0] == '-'){
             continue;
         }
         int digit = get_dec_by_char(str[i]);
         if (digit < 0 || digit >= base) {
-            result = FALSE;
+            result = ERROR;
         }
     }
     return result;
@@ -77,7 +85,6 @@ char *dec_to_any(const int32_t num, const unsigned int base) {
 
 int32_t any_to_dec(const char *str, const unsigned int base) {
     int32_t result = 0;
-    if (validate_base(str, base)) {
         // Process decimal number
         if (base == DEC_BASE) {
             int sign = 1;
@@ -102,7 +109,6 @@ int32_t any_to_dec(const char *str, const unsigned int base) {
             }
             result = (int32_t) unsigned_result;
         }
-    }
 
     return result;
 }
@@ -114,4 +120,8 @@ void context_init(Context *context) {
     context->final_base = 2;
     context->error_flag = FALSE;
     context->error = -1;
+}
+
+const char *get_error_message(const Error error) {
+    return Error_messages[error];
 }

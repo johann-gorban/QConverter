@@ -24,8 +24,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 void MainWindow::convertNumber() {
-    executeOperation(convert, &context);
-    updateDisplay();
+    // Input validation
+    executeOperation(validate, &context);
+
+    if (!context.error_flag) {
+        executeOperation(convert, &context);
+        updateDisplay();
+    }
+    else {
+        showErrorWarning();
+    }
+}
+
+void MainWindow::showErrorWarning() {
+    const QString message = (context.error_message == NULL) ? "Unknown error" : context.error_message;
+    QMessageBox::critical(this, "Error ocurred", message, QMessageBox::Ok);
 }
 
 void MainWindow::copyResult() {
