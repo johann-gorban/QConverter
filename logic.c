@@ -117,12 +117,23 @@ int32_t any_to_dec(const char *str, const unsigned int base) {
 }
 
 void context_init(Context *context) {
-    context->source_num = (char *)"0\0";
+    context->source_num = (char *) malloc(256);
+    if (context->source_num) {
+        context->source_num[0] = '0';
+        context->source_num[1] = '\0';
+    }
     context->source_base = 2;
-    context->final_num = (char *)"0\0";
+
+    context->final_num = (char *) malloc(256);
+    if (context->final_num) {
+        context->final_num[0] = '0';
+        context->final_num[1] = '\0';
+    }
     context->final_base = 2;
+
+    context->error = OK;
     context->error_flag = FALSE;
-    context->error = -1;
+    context->error_message = NULL;
 }
 
 const char *get_error_message(const Error error) {

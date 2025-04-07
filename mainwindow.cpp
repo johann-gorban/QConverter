@@ -4,6 +4,7 @@
 #include "bases.h"
 
 #include <string>
+#include <cstring>
 
 #include <QtWidgets>
 #include <QTimer>
@@ -75,9 +76,8 @@ void MainWindow::updateDisplay() {
 void MainWindow::updateInputValue(const QString &value) {
     std::string stdValue = value.toStdString();
 
-    context.source_num = new char[stdValue.size() + 1]; // To logic
-    std::copy(stdValue.begin(), stdValue.end(), context.source_num);
-    context.source_num[stdValue.size()] = '\0';
+    std::strncpy(context.source_num, stdValue.c_str(), 255);
+    context.source_num[255] = '\0';
 }
 
 void MainWindow::updateInputBase(const QString &base) {
