@@ -33,6 +33,7 @@ private:
     void bases_setup();
 
     void slots_connect();
+
 private slots:
     void convertNumber();
 

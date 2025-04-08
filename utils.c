@@ -1,10 +1,13 @@
 #include "utils.h"
 
 #include "bases.h"
+#include "errors.h"
 
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+
+#define MAX_LENGTH 256
 
 void swap(char *a, char *b) {
     char temp = *a;
@@ -32,30 +35,43 @@ int str_to_int(const char *str) {
     }
 
     if (str[0] == '-') {
-        num = (-1) * num;
+        num = -1 * num;
     }
 
     return num;
 }
 
-char *int_to_str(const int num) {
-    char *buffer = (char *)malloc(MAX_BITS + 1);
-    if (!buffer) return NULL;
+Error int_to_str(const int num, char **buffer) {
+    Error error = allocate_memory(buffer, MAX_LENGTH);
 
-    int is_negative = num < 0;
-    unsigned int abs_num = is_negative ? -num : num;
+    if (error == NO_ERROR) {
+        int is_negative = num < 0;
+        unsigned int abs_num = is_negative ? -num : num;
 
-    int i = 0;
-    do {
-        buffer[i++] = '0' + (abs_num % 10);
-        abs_num /= 10;
-    } while (abs_num > 0);
+        int i = 0;
+        do {
+            (*buffer)[i++] = '0' + (abs_num % 10);
+            abs_num /= 10;
+        } while (abs_num > 0 && i < MAX_LENGTH);
 
-    if (is_negative) {
-        buffer[i++] = '-';
+        if (is_negative) {
+            (*buffer)[i++] = '-';
+        }
+
+        (*buffer)[i] = '\0';
+        reverse_str(*buffer, *buffer + strlen(*buffer) - 1);
+    }
+    return error;
+}
+
+Error allocate_memory(void *ptr, size_t size) {
+    Error error = NO_ERROR;
+
+    ptr = malloc(size);
+
+    if (!ptr) {
+        error = MEMORY_ALLOCATION_ERROR;
     }
 
-    buffer[i] = '\0';
-    reverse_str(buffer, buffer + strlen(buffer) - 1);
-    return buffer;
+    return error;
 }

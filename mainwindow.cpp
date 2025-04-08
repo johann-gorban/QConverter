@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     bases_setup();
 
     // Context setup
-    executeOperation(context_initialization, &context);
+    executeOperation(CONTEXT_INITIALIZATION, &context);
 
     // Widgets setup and packing
     widgets_setup();
@@ -23,19 +23,28 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 }
 
 MainWindow::~MainWindow() {
-    free(context.source_num);
-    free(context.final_num);
-    if (context.error_message) {
-        free(context.error_message);
-    }
+    // if (context.source_num) {
+    //     free(context.source_num);
+    // }
+
+    // if (context.final_num) {
+    //     free(context.final_num);
+    // }
+
+    // if (context.error_message) {
+    //     free(context.error_message);
+    // }
 }
 
 void MainWindow::convertNumber() {
     // Input validation
-    executeOperation(validate, &context);
+    executeOperation(VALIDATE, &context);
+    int validation_error = context.error_flag;
 
-    if (!context.error_flag) {
-        executeOperation(convert, &context);
+    executeOperation(CHECK_SIZE, &context);
+
+    if (!context.error_flag && !validation_error) {
+        executeOperation(CONVERT, &context);
         updateDisplay();
     }
     else {
@@ -68,11 +77,10 @@ void MainWindow::swapLines() {
     inputBaseBox->setCurrentText(current_output_base);
 
     // Swap edit lines
-    auto current_input_line = inputLine->text();
     auto current_output_line = outputLine->text();
 
     inputLine->setText(current_output_line);
-    outputLine->setText(current_input_line);
+    convertNumber();
 }
 
 void MainWindow::updateDisplay() {
